@@ -1,0 +1,300 @@
+    PROCESSOR 6502
+
+; ============================================================
+; fort.dasm -- Fort Apocalypse master equates and layout
+; Converted from fort.s (SynAssembler format)
+;
+; Conversion rules applied:
+;   - 5-digit line-number prefix stripped
+;   - * comments -> ; comments
+;   - .EQ  -> EQU
+;   - .OR  -> ORG
+;   - .BS  -> ds.b
+;   - .IN  -> include (filenames lowercased, .dasm extension)
+;   - .DA LABEL -> dc.w LABEL  (16-bit address)
+;   - .DA #%BITS -> dc.b %BITS (8-bit immediate)
+;   - .HS HH -> dc.b $HH
+;   - .LI, .TF -> commented out (no DASM equivalent)
+;   - Dots in identifiers replaced with underscores
+;   - Address labels get colon; EQU symbols do not
+; ============================================================
+
+
+; *****************
+; Fort      *
+; Apocalypse   *
+; ROM       *
+; *
+; By Steve Hales *
+; *
+; Copyright    *
+; September 1   *
+; 1982  Synapse  *
+; Software    *
+; *
+; *****************
+; .LI OFF
+;
+; FEBUARY 8, 1983
+;
+; SYSTEM EQUATES
+;
+FRAME                EQU $14
+ATTRACT              EQU $4D
+VDSLST               EQU $200
+VVBLKI               EQU $222
+VVBLKD               EQU $224
+SDMCTL               EQU $22F
+SDLST                EQU $230
+PRIOR                EQU $26F
+PCOLR0               EQU $2C0
+PCOLR1               EQU $2C1
+PCOLR2               EQU $2C2
+PCOLR3               EQU $2C3
+COLOR0               EQU $2C4
+COLOR1               EQU $2C5
+COLOR2               EQU $2C6
+COLOR3               EQU $2C7
+COLOR4               EQU $2C8
+DMACTL               EQU $D400
+M0PF                 EQU $D000
+M1PF                 EQU $D001
+M2PF                 EQU $D002
+M3PF                 EQU $D003
+P0PF                 EQU $D004
+P1PF                 EQU $D005
+P2PF                 EQU $D006
+P3PF                 EQU $D007
+M0PL                 EQU $D008
+M1PL                 EQU $D009
+M2PL                 EQU $D00A
+M3PL                 EQU $D00B
+P0PL                 EQU $D00C
+P1PL                 EQU $D00D
+P2PL                 EQU $D00E
+P3PL                 EQU $D00F
+COLPM0               EQU $D012
+COLPM1               EQU $D013
+COLPM2               EQU $D014
+COLPM3               EQU $D015
+COLPF0               EQU $D016
+COLPF1               EQU $D017
+COLPF2               EQU $D018
+COLPF3               EQU $D019
+COLBK                EQU $D01A
+HITCLR               EQU $D01E
+CHBASE               EQU $D409
+RANDOM               EQU $D20A
+CHBAS                EQU $2F4
+CH                   EQU $2FC
+CH2                  EQU $2F2
+KBCODE               EQU $D209
+GRACTL               EQU $D01D
+SIZEP0               EQU $D008
+SIZEP1               EQU $D009
+SIZEP2               EQU $D00A
+SIZEP3               EQU $D00B
+PMBASE               EQU $D407
+HPOSP0               EQU $D000
+HPOSP1               EQU $D001
+HPOSP2               EQU $D002
+HPOSP3               EQU $D003
+HPOSM0               EQU $D004
+HPOSM1               EQU $D005
+HPOSM2               EQU $D006
+HPOSM3               EQU $D007
+SIZEM                EQU $D00C
+CONSOL               EQU $D01F
+NMIEN                EQU $D40E
+DLIST                EQU $D402
+HSCROL               EQU $D404
+VSCROL               EQU $D405
+WSYNC                EQU $D40A
+VCOUNT               EQU $D40B
+STICK                EQU $278
+TRIG0                EQU $D010
+AUDF1                EQU $D200
+AUDC1                EQU $D201
+AUDF2                EQU $D202
+AUDC2                EQU $D203
+AUDF3                EQU $D204
+AUDC3                EQU $D205
+AUDF4                EQU $D206
+AUDC4                EQU $D207
+AUDCTL               EQU $D208
+SKCTL                EQU $D20F
+SKSTAT               EQU $D20F
+CDTMV1               EQU $218
+CDTMV2               EQU $21A
+CDTMA1               EQU $226
+CDTMA2               EQU $228
+VVBLKI_RET           EQU $E45F
+VVBLKD_RET           EQU $E462
+;
+; CONSTANTS
+;
+MIS                  EQU $300
+PL0                  EQU $400
+PL1                  EQU $500
+PL2                  EQU $600
+PL3                  EQU $700
+RIGHT                EQU $8
+LEFT                 EQU $4
+DOWN                 EQU $2
+UP                   EQU $1
+CHECK_SUM            EQU $264C
+;
+; CHANGE THESE CONSTANTS
+; WHEN PROGRAM NEED TO GO MOBILE
+;
+; START    LEN
+PLAYER               EQU $0  ; $800  R
+PLAY_SCRN            EQU $300  ; $300  R
+CHR_SET1             EQU $800  ; $400  R
+CHR_SET2             EQU $C00  ; $400  R
+POD_1                EQU $C00+920  ; $4E   R
+POD_2                EQU $3925  ; $9B   R
+MAP                  EQU $1100+3  ; $2800 R
+SLAVES               EQU $3904  ; $20   R
+SCANNER              EQU $39C0  ; $640  R
+RAM1_STUFF           EQU $C00+144  ; $48
+RAM2_STUFF           EQU $100
+PL                   EQU $8000
+PACKED_MAP           EQU PL  ; $D34
+PACKED_SCAN          EQU PL+$D34  ; $4ED
+PROGRAM              EQU PL+$1221  ; $2D2C
+S_LINE1              EQU CHR_SET1+736
+S_LINE2              EQU CHR_SET1+832
+S_LINE3              EQU CHR_SET1+928
+LASERS_1             EQU CHR_SET2+8
+LASERS_2             EQU CHR_SET2+40
+LASER_3              EQU CHR_SET2+72
+BLOCK_1              EQU CHR_SET2+80
+BLOCK_2              EQU CHR_SET2+88
+BLOCK_3              EQU CHR_SET2+96
+BLOCK_4              EQU CHR_SET2+104
+BLOCK_5              EQU CHR_SET2+112
+BLOCK_6              EQU CHR_SET2+120
+BLOCK_7              EQU CHR_SET2+128
+BLOCK_8              EQU CHR_SET2+136
+WINDOW_1             EQU CHR_SET2+712
+WINDOW_2             EQU CHR_SET2+720
+EXP                  EQU $20
+EXP2                 EQU $3F
+EXPLOSION            EQU CHR_SET2+256
+EXPLOSION2           EQU CHR_SET2+504
+MISS_LEFT            EQU $71
+MISS_RIGHT           EQU $72
+MISS_CHR_LEFT        EQU CHR_SET2+904
+MISS_CHR_RIGHT       EQU CHR_SET2+912
+EXP_WALL             EQU $47+128
+;
+MAX_LEFT             EQU 48
+MAX_RIGHT            EQU 192
+MAX_UP               EQU 100
+MAX_DOWN             EQU 212
+MAX_FUEL             EQU $2000
+MIN_LEFT             EQU 110
+MIN_RIGHT            EQU 130
+MIN_UP               EQU 146
+MIN_DOWN             EQU 166
+MAX_TANKS            EQU 6
+POD_SPEED            EQU 15
+;
+; ZERO PAGE USAGE
+;
+    ORG $15
+ADR1:    ds.b 2
+ADR2:    ds.b 2
+TEMP1:    ds.b 1
+TEMP2:    ds.b 1
+TEMP3:    ds.b 1
+TEMP4:    ds.b 1
+TEMP5:    ds.b 1
+TEMP6:    ds.b 1
+TEMP_MODE:    ds.b 1
+;
+ADR1_I:    ds.b 2
+ADR2_I:    ds.b 2
+TEMP1_I:    ds.b 1
+TEMP2_I:    ds.b 1
+TEMP3_I:    ds.b 1
+TEMP4_I:    ds.b 1
+S_ADR:    ds.b 2
+S_TEMP:    ds.b 1
+S_FLG:    ds.b 1
+TANK_START_X:
+    ds.b MAX_TANKS
+TANK_START_Y:
+    ds.b MAX_TANKS
+TIM1_VAL:    ds.b 1  ; LASER 1
+TIM2_VAL:    ds.b 1  ; LASER 2
+TIM3_VAL:    ds.b 1  ; CHOP EXPLODE
+TIM4_VAL:    ds.b 1  ; RE FUEL
+TIM5_VAL:    ds.b 1  ; TANK EXPLODE
+TIM6_VAL:    ds.b 1  ; DEMO TIMER
+TIM7_VAL:    ds.b 1  ; ROBO EXPLODE
+TIM8_VAL:    ds.b 1  ; ROBO MISSILE
+TIM9_VAL:    ds.b 1  ; SLAVE MESS
+SSIZEM:    ds.b 1
+    ORG $43
+S1_1_VAL:    ds.b 1
+S1_2_VAL:    ds.b 1
+S2_VAL:    ds.b 1
+S3_VAL:    ds.b 1
+S4_VAL:    ds.b 1
+S5_VAL:    ds.b 1
+S6_VAL:    ds.b 1  ; MISSILE SND
+GAME_POINTS:    ds.b 1
+DEMO_STATUS:    ds.b 1
+DEMO_COUNT:    ds.b 1
+;
+MAX_PODS             EQU 39
+;
+    ORG POD_1
+POD_STATUS:    ds.b MAX_PODS
+POD_DX:    ds.b MAX_PODS
+    ORG POD_2
+POD_X:    ds.b MAX_PODS
+POD_Y:    ds.b MAX_PODS
+POD_TEMP1:    ds.b MAX_PODS
+POD_TEMP2:    ds.b MAX_PODS
+;
+    ORG SLAVES
+SLAVE_STATUS:    ds.b 8
+SLAVE_X:    ds.b 8
+SLAVE_Y:    ds.b 8
+SLAVE_DX:    ds.b 8
+;
+    ORG $50
+    include "fort7.dasm"
+;
+    ORG PROGRAM
+; .TF "H1:FORT.OBJ"
+;
+;
+;
+; REST OF PROGRAM IS
+; INSIDE INCLUDE FILES
+;
+;
+    include "fnt1.dasm"
+    include "fnt2.dasm"
+;
+    include "fort1.dasm"
+    include "fort2.dasm"
+    include "fort3.dasm"
+    include "fort4.dasm"
+    include "fort5.dasm"
+    include "fort6.dasm"
+    include "fort8.dasm"
+;
+END_CART:
+    ds.b $BFFA-*
+    dc.w CART_START
+    dc.b $00
+    dc.b %10000100
+    dc.w CART_START
+;
+; EOF
+;
