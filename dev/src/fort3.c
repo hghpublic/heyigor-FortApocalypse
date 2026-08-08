@@ -80,7 +80,9 @@
  * PM-RAM layout  (player_base is a 0x800-byte page-aligned buffer)
  * PLAYER offsets: MIS=$300, PL0=$400, PL1=$500, PL2=$600, PL3=$700
  * ----------------------------------------------------------------------- */
-extern uint8_t player_base[];
+// extern uint8_t player_base[];
+// HACK: fixed build error
+uint8_t player_base[0x800];
 #define PLAYER_PL0   (player_base + 0x400u)
 #define PLAYER_PL1   (player_base + 0x500u)
 #define PLAYER_PL2   (player_base + 0x600u)
