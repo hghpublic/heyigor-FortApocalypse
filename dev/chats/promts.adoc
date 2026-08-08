@@ -1,0 +1,125 @@
+= Promts
+
+Claude Sonnet 4.6
+
+----
+create a comment with a list of all variables, functions, constants which are also declared in fort.h. you can read it from the current directory.
+----
+
+----
+convert fn1.s to c
+create a c function which creates a bitmap from the font data
+
+convert fn2.s to c
+create and test a bitmap converter to c for fnt2
+
+
+save a complete copy including your thoughts in a file to my local folder
+save a copy of all sessions in this chat including your detailed reasoning into a file in the folder "dev/chats"
+
+create a new and complete  save of all sessions in this chat including your detailed reasoning, updates, reviews, edits, tests into a file in the folder "dev/chats". be as complete as possible. do not compare new content against existing files.
+
+create a new and complete standalone save of the last session in this chat including your detailed reasoning, updates, reviews, edits, tests into a file in the project folder. be as complete as possible. do not compare new content against existing files.
+
+create a new and complete standalone save of the last 2 sessions in this chat including your detailed reasoning, updates, reviews, edits, tests into a file in the project folder. be as complete as possible. do not compare new content against existing files.
+
+create a new and complete standalone session log of the last session including your detailed reasoning, updates, reviews, edits, tests into a file in the project folder. be as complete and verbose as possible.
+
+
+create new and complete standalone session log files for "convert fort5.s" in this chat including your detailed reasoning, updates, reviews, edits, tests into a file in the project folder. be as complete as possible. do not compare new content against existing files. make the session log files small enough that no api errors are caused.
+
+----
+
+
+----
+create a bitmap with all characters from file fnt1.c
+convert fnt1.s to dasm
+convert fort.s to c
+convert fnt2.s to dasm. Store the generated file in folder "dev/dasm".
+----
+
+----
+create new and complete standalone session log files for "convert fort2.s" in this chat including your detailed reasoning, updates, reviews, edits, tests into a file in the project folder. be as complete as possible. do not compare new content against existing files. make the session log files small enough that no api errors are caused.
+----
+
+== Stash
+
+----
+The user wants me to create session log files that are small enough not to cause API timeouts. I should split the fort5 session log into multiple files if needed, or at least write it carefully in chunks.
+
+Let me think about what to include and how to split it:
+
+Part 1: Context, source analysis, and per-function analysis (assembly side) Part 2: C implementation decisions, the produced code, and compile test
+
+I'll write two files:
+
+session-log-fort5-conversion-part1.md — context, assembly analysis, function inventory, key technical challenges
+session-log-fort5-conversion-part2.md — C implementation decisions, full fort5.h and fort5.c listings, compile test I'm checking the size estimates against the fort4 log to figure out how to split this effectively. Since the user specifically wants to avoid API errors, I'll aim for two focused files around 400-500 lines each, with the first covering analysis and context, and the second handling implementation details and code listings. I'm outlining the structure for the first file, which will include the session context, an inventory of assembly functions organized in a table, and then a detailed section-by-section walkthrough of the critical routines like the slave state machine, fuel base logic, scanner setup, and position calculations.
+For the second file, I'll continue with the explosion sequence and DLI chain analysis, then present the full C and header file listings along with the compile results and any remaining open items.
+
+I'll write two focused files sequentially — the first covering analysis and reasoning, the second covering decisions and produced code.
+
+
+----
+
+
+----
+Two files written:
+
+dev/chats/session-log-fort5-part1-analysis.md — Session context, files read, new variables, function inventory, all static data tables, and deep algorithm analysis for every non-trivial routine (slave state machine, EOR#$FE distance check, S.COL fall-through, DO.LINE stride logic, POS.IT temp1 clobber, checksum trap, NEXT.PART1 bit-scatter, refuel animation, DLI chain, all 6 sound channels with S2 lifecycle and S4 BCD arithmetic).
+
+dev/chats/session-log-fort5-part2-implementation.md — Design decisions with rationale (static visibility, definition order, FORT_EXP local array, PLAY.SCRN logic, s2_val lifecycle, bcd_add not shared, CHR_SET2 pointer conflict, VDSLST cast convention, set_scanner row clamp), full fort5.h listing, full fort5.c listing, compile test command and result, and open items table.
+
+The "API Error: The operation timed out" from your earlier request was caused by trying to compose a single ~1200-line file in one Write call — the tool hit the 2-minute execution limit. Splitting into two focused files of ~400 lines each avoids this.
+----
+
+
+----
+Now I have everything. Chat1–3 are identical (same session recorded multiple times); chat4 covers the fort1 conversion start; chat5 is the last session's bug-fix notes. I'll write one complete standalone document covering all sessions with full reasoning.
+
+The user wants a complete, standalone save of all sessions in this chat - covering everything from the beginning through now. They want it to be as complete as possible, including all reasoning, updates, reviews, edits, and tests. They don't want me to compare against existing files.
+
+I need to pull together:
+
+Prior session content (from the conversation summary at the top):
+
+Converting fort1.s to C
+All the technical decisions made
+The files created (fort1.h, fort1.c)
+All the key sections written
+This session (current context window):
+
+Bug review and fixes
+The reasoning I went through for each bug
+I'm going to structure this as a comprehensive markdown document that captures both sessions chronologically, starting with the conversion work and then moving into the bug fixes. I'll name it something like chat_fort1_complete.md and make sure it includes all the technical context and decision-making from both sessions.
+
+Now I have a comprehensive picture of all sessions. Chat1, chat2, and chat3 are identical (three versions of what seems to be the same session—probably re-recordings or duplicates). Chat4 is the beginning of the fort1.s conversion. Chat5 is what I wrote in the previous message.
+
+Now I need to write a completely new, comprehensive file that covers ALL sessions from the beginning. This should include:
+
+Sessions 1-3 (fnt1.s conversion, fnt1_bitmap, fnt2.s conversion, fnt2_bitmap):
+
+Converting fnt1.s to C
+Creating fnt1_bitmap.h/c
+Converting fnt2.s to C
+Creating fnt2_bitmap.h/c, font_bitmap.h/c
+Testing with test_fnt2.c
+Session 4 (fort1.s conversion - initial creation of fort1.h/c):
+
+Reading all source files
+All translation decisions
+Writing fort1.h and fort1.c
+Initial bug fixes noted at end
+Session 5 (this session - bug fixes and reviews):
+
+The context summary from the compacted session
+Full review of fort
+1.c
+
+7 bugs found and fixed with full reasoning
+Now I'm compiling everything into a single comprehensive document that captures the complete conversion journey without comparing against existing files.
+
+Edited
+fort_conversion_all_sessions.md+987-0
+dev/chats/fort_conversion_all_sessions.md has been written — a single self-contained document covering all sessions from fnt1.s through the fort1.c bug fixes, with full assembly traces, reasoning chains, and all 7 bugs documented with before/after code and verification tables.
+----

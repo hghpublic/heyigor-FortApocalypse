@@ -1,0 +1,6 @@
+= Stash
+
+
+----
+gcc -Wall -Wextra -std=c11 -o fnt1_sheet fnt1_sheet.c fnt1.c font_bitmap.c -I. && fnt1_sheet
+----

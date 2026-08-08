@@ -1,0 +1,9 @@
+= SynAssembler
+
+
+SynAssembler ist ein klassischer Zwei-Pass-Assembler von Synapse Software für Atari-8-Bit-Computer. Er erstellt eine Symboltabelle im ersten Durchlauf und erzeugt im zweiten Durchlauf den Objektcode sowie eine alphabetische Bezeichnerliste. Details finden Sie im Synapse Assembler Manual auf AtariWiki.
+
+
+https://atariwiki.org/wiki/Wiki.jsp?page=Synapse%20Assembler%20Manual
+
+https://atariwiki.org/wiki/Wiki.jsp?page=Synapse%20Assembler

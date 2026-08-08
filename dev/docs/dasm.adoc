@@ -1,0 +1,155 @@
+= dasm
+:toc:
+:sectnums:
+
+== dasm
+----
+dasm
+DASM 2.20.16
+Copyright (c) 1988-2020 by the DASM team.
+License GPLv2+: GNU GPL version 2 or later (see file LICENSE).
+DASM is free software: you are free to change and redistribute it.
+There is ABSOLUTELY NO WARRANTY, to the extent permitted by law.
+
+Usage: dasm sourcefile [options]
+
+-f#      output format 1-3 (default 1)
+-oname   output file name (else a.out)
+-lname   list file name (else none generated)
+-Lname   list file, containing all passes
+-sname   symbol dump file name (else none generated)
+-v#      verboseness 0-4 (default 0)
+-d       debug mode (for developers)
+-Dsymbol              define symbol, set to 0
+-Dsymbol=expression   define symbol, set to expression
+-Msymbol=expression   define symbol using EQM (same as -D)
+-Idir    search directory for INCLUDE and INCBIN
+-p#      maximum number of passes
+-P#      maximum number of passes, with fewer checks
+-T#      symbol table sorting (default 0 = alphabetical, 1 = address/value, 2 = order in code)
+-E#      error format (default 0 = MS, 1 = Dillon, 2 = GNU)
+-S       strict syntax checking
+-R       remove binary output-file in case of errors
+-m#      safety barrier to abort on recursions, max. allowed file-size in kB
+
+Report bugs on https://github.com/dasm-assembler/dasm please!
+----
+
+
+== fnt1.s
+
+----
+python3 - \
+    fnt1.s \
+    fnt1.dasm \
+<<'PYEOF'
+
+PYEOF
+echo "Exit: $?"
+----
+
+----
+SRC=xxx/fnt1.dasm
+# Head (header + FNT1 + CHR $00 + CHR $01)
+head -70 "$SRC"
+echo "---"
+# Named labels
+grep -n "^POS_MASK1:\|^FORT_EX1:\|^FORT_EX2:\|^FORT_EX3:\|^FORT_EX4:\|^T_5:\|^EXP_SHAPE:\|^FNT1:" "$SRC"
+----
+
+----
+SRC=xxx/fnt1.dasm
+# T_5 area (should have .AT expansion)
+sed -n '310,322p' "$SRC"
+echo "---"
+# EXP_SHAPE area
+sed -n '556,572p' "$SRC"
+echo "---"
+# CHR $5B-$7F area (end of file)
+tail -50 "$SRC"
+----
+
+----
+python3 - xxx/fnt1.dasm << 'PYEOF'
+import re, sys
+
+text = open(sys.argv[1]).read()
+count = 0
+for line in text.splitlines():
+    s = line.strip()
+    if not s.startswith('DC.B'):
+        continue
+    # strip trailing comment
+    s = re.sub(r'\s*;.*$', '', s)
+    # extract all operands after DC.B
+    operands = s[len('DC.B'):].strip()
+    # count comma-separated tokens
+    tokens = [t.strip() for t in operands.split(',') if t.strip()]
+    count += len(tokens)
+
+print(f'Total DC.B bytes: {count}  (expected 1024)')
+PYEOF
+----
+
+== fnt2.s
+
+----
+python3 - <<'PYEOF'
+
+PYEOF
+----
+
+== fort.s
+
+----
+python3 - <<'PYEOF'
+
+PYEOF
+----
+
+== fort1.s
+
+----
+
+----
+
+== fort2.s
+
+----
+
+----
+
+== fort3.s
+
+----
+
+----
+
+== fort4.s
+
+----
+
+----
+
+== fort5.s
+
+----
+
+----
+
+== fort6.s
+
+----
+
+----
+
+== fort7.s
+
+----
+
+----
+
+== fort8.s
+
+----
+----

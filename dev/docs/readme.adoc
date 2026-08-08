@@ -1,0 +1,93 @@
+= Read Me
+
+SynAssembler
+
+Exactly 1024 bytes. Created fnt1.c and fnt1.h with:
+
+fnt1_data[1024] — all 128 characters × 8 bytes, matching the original assembly data verbatim
+Named pointers for the 7 labeled symbols: POS_MASK1, FORT_EX1–FORT_EX4, T_5, EXP_SHAPE
+One note on CHR $20 (T_5): the original uses .AT -/1!9)8(2"/ (SynAssembler text directive) rather than explicit binary bytes. I stored the raw ASCII values of those characters (0x31, 0x21, ...), which is the most straightforward interpretation — but if the game used Atari-internal screen codes instead, those 8 bytes would need to be offset (Atari internal = ASCII − 0x20).
+
+
+I need to understand the two Atari display modes in use here before writing. The font data has two character encoding styles:
+
+1bpp (ANTIC mode 2): 8 pixels per row byte, one bit each — used by $00–$0F and special chars
+2bpp (ANTIC mode 4): 4 pixels per row byte at 2 bits each, hardware-doubled to 8 wide — used by the digits $10–$19 and alphabet $41–$5A
+
+FNT1_1BPP — 8 pixels per row byte (explosion frames, masks, etc.)
+FNT1_2BPP — 4 pixels per row byte, each doubled to 8 wide (digits, A–Z); matches how the Atari ANTIC mode 4 hardware stretches them on-screen
+
+Here's what was created:
+
+fnt1_bitmap.h / fnt1_bitmap.c — three functions:
+
+Function	Purpose
+fnt1_decode_char(chr, mode, out[64])	Decode one 8×8 glyph to a flat byte array (pixel values 0–1 or 0–3)
+fnt1_create_bitmap(chars, n, mode, &w, &h)	Render an array of char indices → heap-allocated pixel buffer
+fnt1_write_bmp(path, pixels, w, h, palette)	Write a 24-bit BMP file; NULL palette uses built-in defaults
+
+
+== fnt2
+
+
+A few observations about this font vs fnt1:
+
+$21–$3A (A–Z equivalent range) use 0x55 (%01010101) border bytes — that's the ANTIC mode 4 "background fill" pattern, making these characters use the 2bpp rendering path from fnt1_bitmap.
+$41–$46 are horizontal fill gradients (varying rows of 0xAA), used as shading tiles for cave/terrain surfaces.
+$4C–$4F, $52–$53 are corner/edge tiles with diagonal transitions — the building blocks for the fort walls.
+$61–$67 are partial-fill ramp tiles (the 0x55 fade-in/out pattern), likely used for rounded terrain edges.
+
+----
+python3 -c "
+import re
+data = open('fnt2.c').read()
+array_body = re.search(r'fnt2_data\[128 \* 8\] = \{(.*?)\};', data, re.DOTALL).group(1)
+count = len(re.findall(r'0x[0-9A-Fa-f]{2}', array_body))
+print(f'Array bytes: {count} (expected 1024)')
+"
+----
+----
+gcc -Wall -Wextra -c fnt2.c -I. -o /tmp/fnt2.o 2>&1 && echo "OK"
+----
+
+----
+cd asm-to-c-conversion && gcc -Wall -Wextra -std=c11 -o test_fnt2 test_fnt2.c fnt2.c fnt2_bitmap.c font_bitmap.c && echo "Build OK"
+----
+
+----
+# Verify BMP headers are well-formed
+python3 -c "
+import struct
+for name in ['fnt2_demo.bmp', 'fnt2_sheet_1bpp.bmp', 'fnt2_sheet_2bpp.bmp']:
+    with open(name, 'rb') as f:
+        sig = f.read(2)
+        fsize = struct.unpack('<I', f.read(4))[0]
+        f.read(4)  # reserved
+        offset = struct.unpack('<I', f.read(4))[0]
+        hdr_size = struct.unpack('<I', f.read(4))[0]
+        w = struct.unpack('<I', f.read(4))[0]
+        h = struct.unpack('<I', f.read(4))[0]
+        f.read(2)  # planes
+        bpp = struct.unpack('<H', f.read(2))[0]
+        actual = len(open(name,'rb').read())
+    ok = sig == b'BM' and fsize == actual and offset == 54 and bpp == 24
+    print(f'{name}: {w}x{h} {bpp}bpp  file={fsize}B  {\"OK\" if ok else \"BAD\"}')"
+
+----
+
+----
+All 17 tests pass, 3 valid BMP files written. Here's a summary of what was built:
+
+New files:
+
+File	Purpose
+font_bitmap.h/c	Generic engine — font_decode_char, font_create_bitmap, font_create_sheet, font_write_bmp, all taking const uint8_t *font_data
+fnt2_bitmap.h/c	Thin fnt2 wrappers + fnt2_create_sheet() (16-col grid of all 128 chars)
+test_fnt2.c	17 assertions across 9 tile types
+Test coverage:
+
+Blank tile, horizontal line, diamond, solid fill (both 1bpp alternating-bit and 2bpp solid-color-2), diagonal stripe, 2bpp border character, ring/hollow shape, multi-char bitmap strip, 1bpp and 2bpp full character sheets
+BMP outputs: fnt2_sheet_1bpp.bmp and fnt2_sheet_2bpp.bmp (128×64), fnt2_demo.bmp (48×8 strip). All headers verified well-formed.
+
+The font_bitmap.c engine also supersedes the duplicate logic in dev/src/fnt1_bitmap.c — fnt1_bitmap can be refactored to thin wrappers the same way when needed.
+----
