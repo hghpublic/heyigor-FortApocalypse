@@ -1,0 +1,33 @@
+= audio
+
+----
+ffmpeg -i input.aiff output.ogg
+----
+
+----
+for f in *.aiff; do ffmpeg -i "$f" "${f%.aiff}.ogg"; done
+----
+
+
+https://en.wikipedia.org/wiki/POKEY
+
+The sound chip used in the Atari 800 is the POKEY (Potentiometer and Keyboard Integrated Circuit), a custom 40-pin digital I/O and audio chip designed by Doug Neubauer. Released in 1979, it also manages keyboard scanning, serial I/O (the SIO bus), and potentiometer inputs like paddles.
+
+Sound on the Atari 800 / 5200 - 6502 Assembly Lesson P23
+
+https://www.youtube.com/watch?v=90LwevXRDNQ
+
+https://www.atarimuseum.de/800.htm
+
+https://uni64.com/net/wiki_de/atari/xl/index.php
+
+https://gury.atari8.info/refs/sound.php
+
+== Atari800 emulator version 7.1.2
+
+https://github.com/atari800/atari800
+
+https://github.com/libretro/libretro-atari800/blob/master/libretro/libretro-core.c
+
+https://github.com/mamedev/mame/blob/master/src/devices/sound/pokey.cpp
+

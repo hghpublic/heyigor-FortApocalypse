@@ -1,0 +1,14 @@
+# Level map format
+
+Level map format is:
+	Bytes	
+	0-1		header ID, not game related
+	2-3		address to load, not game related
+	4-5		length of data, not game related
+	6		color1
+	7		color2
+	8		color3
+	9		color4
+	10		color5
+	11-EOF	level data. each byte represents a character to use
+			from the font.

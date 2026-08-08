@@ -1,0 +1,6 @@
+= C64
+
+
+The Commodore 64 is `little-endian`. It uses a `MOS Technology 6502` 8-bit microprocessor, which stores multi-byte values (like 16-bit memory addresses or pointers) with the least significant byte first.
+
+
