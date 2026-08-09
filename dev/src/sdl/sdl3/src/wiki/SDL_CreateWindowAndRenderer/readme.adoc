@@ -1,0 +1,10 @@
+= Read Me
+
+Create sample bitmap::
++
+[source, bash]
+----
+magick -size 640x480 pattern:checkerboard checkerboard.png
+magick -size 320x240 pattern:checkerboard sample.png
+----
+https://imagemagick.org/command-line-processing

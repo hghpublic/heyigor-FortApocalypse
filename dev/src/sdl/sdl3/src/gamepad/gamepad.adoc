@@ -1,0 +1,77 @@
+= Gamepad
+:experimental:
+
+== SDL3 Examples
+
+https://examples.libsdl.org/SDL3/
+
+https://github.com/libsdl-org/SDL/tree/main/examples/input
+
+== Logitech F310 (Wired Gamepad)
+
+Set bottom toggle to kbd:[D].
+
+https://www.logitechg.com/shop/p/f310-gamepad
+
+== macOS
+
+=== System Information
+
+Hardware > USB
+
+----
+Gamepad F310:
+
+  Location ID:	0x02100000
+  Connection Type:	Removable
+  Manufacturer:	Logitech
+  Serial Number:	96B427FA
+  Link Speed:	12 Mb/s
+  USB Vendor ID:	0x046d
+  USB Product ID:	0xc21d
+  USB Product Version:	0x4014
+
+----
+
+=== ioreg
+
+----
+ioreg -p IOUSB -w0 -l
+
+ioreg -p IOUSB -w0 | sed 's/[^o]*o //; s/@.*$//' | grep -v '^Root.*'
+...
+Gamepad F310
+
+----
+
+=== system_profiler
+
+----
+system_profiler SPUSBHostDataType
+
+USB:
+
+...
+
+    USB 3.1 Bus:
+
+      Location ID: 0x02000000
+      Connection Type: Built-in
+      Driver: AppleT8132USBXHCI
+
+        Gamepad F310:
+
+          Location ID: 0x02100000
+          Connection Type: Removable
+          Manufacturer: Logitech
+          Serial Number: 96B427FA
+          Link Speed: 12 Mb/s
+          USB Vendor ID: 0x046d
+          USB Product ID: 0xc21d
+          USB Product Version: 0x4014
+----
+
+----
+system_profiler -listDataTypes | grep -i usb
+SPUSBHostDataType
+----

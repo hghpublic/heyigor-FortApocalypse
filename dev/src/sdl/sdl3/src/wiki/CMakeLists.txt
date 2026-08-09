@@ -1,0 +1,5 @@
+# SDL3 Wiki
+
+add_subdirectory(SDL_CreateWindow)
+add_subdirectory(SDL_CreateWindowAndRenderer)
+add_subdirectory(SDL_CreateWindowWithProperties)
