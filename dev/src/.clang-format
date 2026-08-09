@@ -1,0 +1,16 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# https://zed0.co.uk/clang-format-configurator/
+---
+Language: Cpp
+BasedOnStyle: Microsoft
+PointerAlignment: Left
+MaxEmptyLinesToKeep: 2
+FixNamespaceComments: true
+AccessModifierOffset: -4
+AlwaysBreakTemplateDeclarations: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
+InsertBraces: true
+ColumnLimit: 80
+# AlignAfterOpenBracket: DontAlign
+---
