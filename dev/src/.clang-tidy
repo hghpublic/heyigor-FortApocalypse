@@ -1,0 +1,6 @@
+# https://clang.llvm.org/extra/clang-tidy/
+Checks:
+    modernize-*,
+    portability-*,
+    cppcoreguidelines-*
+HeaderFilterRegex: 'src/*'
